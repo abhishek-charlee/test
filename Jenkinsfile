@@ -1,12 +1,11 @@
 pipeline {
     agent any
-
     stages {
         stage('Clone Repository') {
             steps {
                 script {
                     // Get the branch name from the webhook payload
-                 #   def branchName = env.BRANCH_NAME
+//                 #   def branchName = env.BRANCH_NAME
                     // Clone the repository
 			echo "Started"
                 #    sh "git clone -b ${branchName} <repository_url>"
@@ -16,7 +15,7 @@ pipeline {
         stage('Start Server') {
             steps {
                 // Run your server start script
-              #  sh './start_server.sh'
+  //            #  sh './start_server.sh'
 		echo "Hello server started"
             }
         }
