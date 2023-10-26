@@ -8,7 +8,7 @@ pipeline {
 //                 #   def branchName = env.BRANCH_NAME
                     // Clone the repository
 			echo "Started"
-                #    sh "git clone -b ${branchName} <repository_url>"
+//                #    sh "git clone -b ${branchName} <repository_url>"
                 }
             }
         }
