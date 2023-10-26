@@ -5,9 +5,10 @@ pipeline {
             steps {
                 script {
                     // Get the branch name from the webhook payload
-//                 #   def branchName = env.BRANCH_NAME
+                      def branchName = env.BRANCH_NAME
                     // Clone the repository
 			echo "Started"
+			echo branchName
 //                #    sh "git clone -b ${branchName} <repository_url>"
                 }
             }
