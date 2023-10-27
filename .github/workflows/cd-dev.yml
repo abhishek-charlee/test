@@ -23,8 +23,16 @@ jobs:
         id: extract-ticket-id
         run: |
           branch_name=$(echo $GITHUB_REF | sed 's|refs/heads/||')
-          ticket_id=$(expr "$branch_name" : 'feat/\(.*\)')
-          echo "::set-output name=ticket_id::$ticket_id"
+          if [[ "$branch_name" =~ ^(feat/|chore/)(.*)$ ]]; then
+            ticket_id="${BASH_REMATCH[2]}"
+            echo "::set-output name=ticket_id::$ticket_id"
+          else
+            echo "No matching pattern found in the branch name."
+          fi
+      - name: Show Ticket ID
+        run: |
+          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
+          echo "Ticket ID: $ticket_id"
 
       - name: Set Up SSH
         run: |
