@@ -25,7 +25,7 @@ jobs:
           branch_name=$(echo $GITHUB_REF | sed 's|refs/heads/||')
           if [[ "$branch_name" =~ ^(feat/|chore/)(.*)$ ]]; then
             ticket_id="${BASH_REMATCH[2]}"
-            export TICKET_ID=$ticket_id
+            echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
           else
             echo "No matching pattern found in the branch name."
           fi
