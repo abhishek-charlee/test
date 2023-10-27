@@ -9,7 +9,7 @@ on:
       - "Chore/*/*"
 
 env:
-  environment: ${{ github.ref_name.split('/')[1] }}
+  environment: github.ref_name.split
 
 jobs:
   deploy:
