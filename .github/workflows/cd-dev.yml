@@ -33,7 +33,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: 10.0.1.6
-          username: abhishek
+          username: $PROJECT_NAME
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 8463
           proxy_host: 34.138.106.113
@@ -42,14 +42,12 @@ jobs:
           proxy_port: 22
           script: |
             whoami
-            # ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
             # sudo su - test3 -c id
             # sudo su - test3 -c pwd
-            # echo "Ticket ID: $ticket_id"
-            # sudo su - test3 -c "mkdir UI/$ticket_id"
-            # sudo su - test3 -c "cd UI/$ticket_id"
+            # sudo su - test3 -c "mkdir UI/$TICKET_ID"
+            # sudo su - test3 -c "cd UI/$TICKET_ID"
             # sudo su - test3 -c "ls UI/"
-            # sudo su - test3 -c "cd UI/$ticket_id && git clone git@github.com:abhishek-charlee/test.git"
+            # sudo su - test3 -c "cd UI/$TICKET_ID && git clone git@github.com:abhishek-charlee/test.git"
 
             # start_port=3000
             # end_port=9000
