@@ -15,24 +15,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract Ticket ID
-        id: extract-ticket-id
+      - name: Extract Project and Ticket ID
         run: |
-          branch_name=$(echo $GITHUB_REF | sed 's|refs/heads/||')
-          if [[ "$branch_name" =~ ^(feat/|chore/)(.*)$ ]]; then
-            ticket_id=$(echo $branch_name | cut -d'/' -f 3)
-            project_name=$(echo $branch_name | cut -d'/' -f 4)
-            echo "project_name=$project_name" >> $GITHUB_OUTPUT
-            echo "ticket_id=$ticket_id" >> $GITHUB_OUTPUT
-          else
-            echo "No matching pattern found in the branch name."
-          fi
-      - name: Show Ticket ID
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          IFS='/' read -ra PARTS <<< "$BRANCH_NAME"
+          PROJECT_NAME=${PARTS[1]}
+          TICKET_ID=${PARTS[2]}
+          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+          echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
+
+      - name: Display Project and Ticket ID
         run: |
-          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
-          ticket_id=${{ steps.extract-ticket-id.outputs.project_name }}
-          echo "Ticket ID: $ticket_id"
-          echo "branch name: $project_name"
+          echo "Project Name: $PROJECT_NAME"
+          echo "Ticket ID: $TICKET_ID"
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
@@ -46,26 +41,27 @@ jobs:
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           proxy_port: 22
           script: |
-            ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
-            sudo su - test3 -c id
-            sudo su - test3 -c pwd
-            echo "Ticket ID: $ticket_id"
-            sudo su - test3 -c "mkdir UI/$ticket_id"
-            sudo su - test3 -c "cd UI/$ticket_id"
-            sudo su - test3 -c "ls UI/"
-            sudo su - test3 -c "cd UI/$ticket_id && git clone git@github.com:abhishek-charlee/test.git"
+            whoami
+            # ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
+            # sudo su - test3 -c id
+            # sudo su - test3 -c pwd
+            # echo "Ticket ID: $ticket_id"
+            # sudo su - test3 -c "mkdir UI/$ticket_id"
+            # sudo su - test3 -c "cd UI/$ticket_id"
+            # sudo su - test3 -c "ls UI/"
+            # sudo su - test3 -c "cd UI/$ticket_id && git clone git@github.com:abhishek-charlee/test.git"
 
-            start_port=3000
-            end_port=9000
+            # start_port=3000
+            # end_port=9000
 
-            for ((port=start_port; port<=end_port; port++))
-            do
-              if ! lsof -i :$port &> /dev/null; then
-                echo "Port $port is available."
-                export AVAILABLE_PORT=$port
-                break  # Exit the loop after finding an available port
-              fi
-            done
+            # for ((port=start_port; port<=end_port; port++))
+            # do
+            #   if ! lsof -i :$port &> /dev/null; then
+            #     echo "Port $port is available."
+            #     export AVAILABLE_PORT=$port
+            #     break  # Exit the loop after finding an available port
+            #   fi
+            # done
 
       # - name: Start Server
       #   run: |
