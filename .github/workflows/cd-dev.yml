@@ -32,8 +32,9 @@ jobs:
       - name: Set SSH Key Secret
         run: |
           echo $PROJECT_NAME
+          secret_key="${PROJECT_NAME}_PRIVATE_KEY"
           echo $secret_key
-          secret_value="${{ secrets["${PROJECT_NAME}_PRIVATE_KEY"] }}"
+          secret_value="${{ secrets[{{ $secret_key }}] }}"
           echo $secret_value
 
       # - name:
