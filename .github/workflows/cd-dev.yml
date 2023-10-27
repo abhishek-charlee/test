@@ -7,44 +7,34 @@ on:
       - "Feat/*/*"
       - "chore/*/*"
       - "Chore/*/*"
+
+env:
+  environment: ${{ github.ref_name.split('/')[1] }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: ${{ env.environment }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Extract Project and Ticket ID
         run: |
+          echo $ENVV
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           IFS='/' read -ra PARTS <<< "$BRANCH_NAME"
           project_name=${PARTS[1]}
           ticket_id=${PARTS[2]}
           echo "PROJECT_NAME=$project_name" >> $GITHUB_ENV
           echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
+        env:
+          ENVV: env.environment
 
       - name: Display Project and Ticket ID
         run: |
           echo "Project Name: $PROJECT_NAME"
           echo "Ticket ID: $TICKET_ID"
-
-      - name: Set SSH Key Secret
-        run: |
-          echo "$PROJECT_NAME"
-          project_name_upcase=$(echo "$PROJECT_NAME" | tr '[:lower:]' '[:upper:]')
-          echo "$project_name_upcase"
-          project_secret_key="${project_name_upcase}_PRIVATE_KEY"
-          echo $project_secret_key
-          echo "PROJECT_SECRET_KEY=$project_secret_key" >> $GITHUB_ENV
-          echo "hi"
-          echo $ssh_key
-
-      # - name: Export
-      #   run: |
-      #     $SECRET_NAME
-      #   env:
-      #     SECRET_NAME: ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
@@ -78,7 +68,7 @@ jobs:
             #   fi
             # done
         env:
-          SECRET_NAME: ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY
+          SECRET_NAME: ${{ secrets[ ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY ]  }}
       # - name: Start Server
       #   run: |
       #     cd your_project_directory
