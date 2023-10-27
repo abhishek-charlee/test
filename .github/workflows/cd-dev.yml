@@ -8,45 +8,36 @@ on:
       - "chore/*/*"
       - "Chore/*/*"
 
-env:
-  environment: github.ref_name.split
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ environment }}
+    environment: test3
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract Project and Ticket ID
+      - name: Extract Ticket ID
         run: |
-          echo $ENVV
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           IFS='/' read -ra PARTS <<< "$BRANCH_NAME"
-          project_name=${PARTS[1]}
           ticket_id=${PARTS[2]}
-          echo "PROJECT_NAME=$project_name" >> $GITHUB_ENV
           echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
-        env:
-          ENVV: env.environment
 
-      - name: Display Project and Ticket ID
+      - name: Display Ticket ID
         run: |
-          echo "Project Name: $PROJECT_NAME"
           echo "Ticket ID: $TICKET_ID"
 
-      - name: ssh proxy command
+      - name: Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: 10.0.1.6
-          username: $PROJECT_NAME
-          key: ${{ secrets[env.SECRET_NAME] }}
-          port: 8463
-          proxy_host: 34.138.106.113
-          proxy_username: abhishek
-          proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          proxy_port: 22
+          host: ${{ secrets.TARGET_HOST }}
+          username: ${{ secrets.TARGET_USERNAME }}
+          key: ${{ secrets.TARGET_PRIVATE_KEY }}
+          port: ${{ secrets.TARGET_PORT }}
+          proxy_host: ${{ secrets.PROXY_HOST }}
+          proxy_username: ${{ secrets.PROXY_USERNAME }}
+          proxy_key: ${{ secrets.PROXY_PRIVATE_KEY }}
+          proxy_port: ${{ secrets.PROXY_HOST_PORT }}
           script: |
             whoami
             # sudo su - test3 -c id
