@@ -48,7 +48,7 @@ jobs:
       #     ssh -J abhishek@34.138.106.113 -i ~/.ssh/id_rsa abhishek@10.0.1.6 -p 8463
 
       - name: ssh proxy command
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@master
         with:
           host: 10.0.1.6
           username: abhishek
