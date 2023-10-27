@@ -50,9 +50,9 @@ jobs:
             sudo su - test3 -c id
             sudo su - test3 -c pwd
             echo "Ticket ID: $ticket_id"
-            sudo su - test3 -c mkdir UI/$ticket_id
-            sudo su - test3 -c cd UI/$ticket_id
-            sudo su - test3 -c ls UI/
+            sudo su - test3 -c "mkdir UI/$ticket_id"
+            sudo su - test3 -c "cd UI/$ticket_id"
+            sudo su - test3 -c "ls UI/"
 
             start_port=3000
             end_port=9000
