@@ -35,9 +35,9 @@ jobs:
           echo $project_name 
           secret_key="${project_name}_PRIVATE_KEY"
           echo $secret_key 
-          secret_value="${{ secrets[$secret_key] }}"
-          echo "Secret Value: $secret_value"
-          echo $PROJECT_SECRET_KEY=$secret_value >> $GITHUB_ENV
+          # secret_value="${{ secrets[$secret_key] }}"
+          # echo "Secret Value: $secret_value"
+          # echo $PROJECT_SECRET_KEY=$secret_value >> $GITHUB_ENV
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
