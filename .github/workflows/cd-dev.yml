@@ -43,15 +43,17 @@ jobs:
           proxy_port: 22
           script: ls
 
+      # - name: Deploy to Project Directory
+      #   run: |
+      #     sudo su - test3
+      #     cd UI
+      #     ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
+      #     echo "Ticket ID: $ticket_id"
+      #     mkdir $ticket_id
+      #     cd $ticket_id
+      #     ls
       - name: Deploy to Project Directory
-        run: |
-          sudo su - test3
-          cd UI
-          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
-          echo "Ticket ID: $ticket_id"
-          mkdir $ticket_id
-          cd $ticket_id
-          ls
+        run: id
 
       - name: Check for Available Ports
         run: |
