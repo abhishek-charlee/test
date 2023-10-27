@@ -33,11 +33,11 @@ jobs:
         run: |
           echo "$PROJECT_NAME"
 
-          # Convert PROJECT_NAME to camelCase
-          PROJECT_NAME_camelcase=$(echo "$PROJECT_NAME" | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2));}1')
-          echo "$PROJECT_NAME_camelcase"
+          # Convert PROJECT_NAME to all uppercase
+          PROJECT_NAME_UPPERCASE=$(echo "$PROJECT_NAME" | tr '[:lower:]' '[:upper:]')
+          echo "$PROJECT_NAME_UPPERCASE"
 
-          secret_key="${PROJECT_NAME_camelcase}_PRIVATE_KEY"
+          secret_key="${PROJECT_NAME_UPPERCASE}_PRIVATE_KEY"
           echo $secret_key
 
           echo "HIi"
