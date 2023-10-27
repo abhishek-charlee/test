@@ -31,10 +31,17 @@ jobs:
 
       - name: Set SSH Key Secret
         run: |
+          # Assuming PROJECT_NAME is in lowercase or uppercase
           echo "$PROJECT_NAME"
-          secret_key="${PROJECT_NAME}_PRIVATE_KEY"
+
+          # Convert PROJECT_NAME to camelCase
+          PROJECT_NAME_camelcase=$(echo "$PROJECT_NAME" | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2));}1')
+          echo "$PROJECT_NAME_camelcase"
+
+          secret_key="${PROJECT_NAME_camelcase}_PRIVATE_KEY"
           echo "$secret_key"
-          secret_value="${{ secrets.secret_key }}"
+
+          secret_value="${{ secrets[secret_key] }}"
           echo "PROJECT_PRIVATE_KEY=$secret_value" >> $GITHUB_ENV
 
       # - name:
