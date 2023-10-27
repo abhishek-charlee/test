@@ -52,7 +52,7 @@ jobs:
                 mkdir testt
                 mkdir ${{ env.TICKET_ID }}
                 cd ${{ env.TICKET_ID }}
-                git clone git@github.com:abhishek-charlee/test.git
+                git clone git@github.com:abhishek-charlee/test.git -b ${GITHUB_REF#refs/heads/}
                 ls
             fi
 
