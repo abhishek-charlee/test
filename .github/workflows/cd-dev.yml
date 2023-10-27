@@ -29,23 +29,6 @@ jobs:
           else
             echo "No matching pattern found in the branch name."
           fi
-      - name: Show Ticket ID
-        run: |
-          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
-          echo "Ticket ID: $ticket_id"
-
-      # - name: Set Up SSH
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      # - name: SSH Into Dev Environment
-      #   run: |
-      #     ssh -J abhishek@34.138.106.113 -i ~/.ssh/id_rsa abhishek@10.0.1.6 -p 8463
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
@@ -57,18 +40,18 @@ jobs:
           proxy_host: 34.138.106.113
           proxy_username: abhishek
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # proxy_port: 22
+          proxy_port: 22
           script: ls
 
-      # - name: Deploy to Project Directory
-      #   run: |
-      #     sudo su - test3
-      #     cd UI
-      #     ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
-      #     echo "Ticket ID: $ticket_id"
-      #     mkdir $ticket_id
-      #     cd $ticket_id
-      #     ls
+      - name: Deploy to Project Directory
+        run: |
+          sudo su - test3
+          cd UI
+          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
+          echo "Ticket ID: $ticket_id"
+          mkdir $ticket_id
+          cd $ticket_id
+          ls
 
       - name: Check for Available Ports
         run: |
