@@ -31,9 +31,9 @@ jobs:
 
       - name: Set SSH Key Secret
         run: |
-          project_name=${{ steps.set-project.outputs.project_name }}
-          echo $project_name 
-          secret_key="${project_name}_PRIVATE_KEY"
+          echo $PROJECT_NAME 
+          secret_key="${PROJECT_NAME}_PRIVATE_KEY"
+          echo $secret_key
 
       # - name:
       #     echo $secret_key
