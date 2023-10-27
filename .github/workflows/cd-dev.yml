@@ -39,11 +39,10 @@ jobs:
           proxy_key: ${{ secrets.PROXY_PRIVATE_KEY }}
           proxy_port: ${{ secrets.PROXY_HOST_PORT }}
           script: |
-            cd UI
-            "mkdir $TICKET_ID"
-            "cd $TICKET_ID"
-            git clone "git@github.com:abhishek-charlee/test.git"
-            ls 
+            mkdir $TICKET_ID
+            cd $TICKET_ID
+            git clone git@github.com:abhishek-charlee/test.git
+            ls
 
             # start_port=3000
             # end_port=9000
