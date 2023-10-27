@@ -35,7 +35,7 @@ jobs:
           secret_key="${PROJECT_NAME}_PRIVATE_KEY"
           echo "$secret_key"
           secret_value="${{ secrets.secret_key }}"
-          echo "$secret_value"
+          echo "PROJECT_PRIVATE_KEY=$secret_value" >> $GITHUB_ENV
 
       # - name:
       #     echo $secret_key
@@ -51,7 +51,7 @@ jobs:
           port: 8463
           proxy_host: 34.138.106.113
           proxy_username: abhishek
-          proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          proxy_key: $PROJECT_PRIVATE_KEY
           proxy_port: 22
           script: |
             whoami
