@@ -9,7 +9,6 @@ on:
 # on:
 #   pull_request:
 #     branches:
-#       - feat/*
 # - chore/*
 
 jobs:
