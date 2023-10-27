@@ -41,7 +41,7 @@ jobs:
           proxy_username: abhishek
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           proxy_port: 22
-          run: |
+          script: |
             sudo su - test3
             id
             pwd
