@@ -34,7 +34,7 @@ jobs:
           echo "$PROJECT_NAME"
           secret_key="${PROJECT_NAME}_PRIVATE_KEY"
           echo "$secret_key"
-          secret_value="${{ secrets[$secret_key] }}"
+          secret_value="${{ secrets.secret_key }}"
           echo "$secret_value"
 
       # - name:
