@@ -38,10 +38,8 @@ jobs:
           proxy_username: ${{ secrets.PROXY_USERNAME }}
           proxy_key: ${{ secrets.PROXY_PRIVATE_KEY }}
           proxy_port: ${{ secrets.PROXY_HOST_PORT }}
-          script: |
-            whoami
-            # sudo su - test3 -c id
-            # sudo su - test3 -c pwd
+          script:
+            ls
             # sudo su - test3 -c "mkdir UI/$TICKET_ID"
             # sudo su - test3 -c "cd UI/$TICKET_ID"
             # sudo su - test3 -c "ls UI/"
