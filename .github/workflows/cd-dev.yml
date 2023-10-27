@@ -31,8 +31,8 @@ jobs:
 
       - name: Set SSH Key Secret
         run: |
-          project_secret_key="SSH_${PROJECT_NAME}_PRIVATE_KEY"
-          echo "$PROJECT_SECRET_KEY=${{ secrets[$project_secret_key] }}" >> $GITHUB_EN
+          project_secret_key="${PROJECT_NAME}_PRIVATE_KEY"
+          echo "$SECRET_KEY=${{ secrets[$project_secret_key] }}" >> $GITHUB_ENV
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
