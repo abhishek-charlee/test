@@ -1,15 +1,12 @@
 name: Feature branch deployment Workflow
 
 on:
-  pull_request:
+  push:
     branches:
-      - "feat/*"
-      - "chore/*"
-# on:
-#   pull_request:
-#     branches:
-# - chore/*
-
+      - "feat/*/*"
+      - "Feat/*/*"
+      - "chore/*/*"
+      - "Chore/*/*"
 jobs:
   deploy:
     runs-on: ubuntu-latest
