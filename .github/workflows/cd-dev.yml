@@ -39,6 +39,7 @@ jobs:
           proxy_key: ${{ secrets.PROXY_PRIVATE_KEY }}
           proxy_port: ${{ secrets.PROXY_HOST_PORT }}
           script: |
+            echo $TICKET_ID
             mkdir $TICKET_ID
             cd $TICKET_ID
             git clone git@github.com:abhishek-charlee/test.git
