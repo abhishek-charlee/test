@@ -19,8 +19,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract Ticket ID
-        id: extract-ticket-id
+      - name: Extract and Set TICKET_ID
         run: |
           branch_name=$(echo $GITHUB_REF | sed 's|refs/heads/||')
           if [[ "$branch_name" =~ ^(feat/|chore/)(.*)$ ]]; then
@@ -29,6 +28,7 @@ jobs:
           else
             echo "No matching pattern found in the branch name."
           fi
+        shell: bash
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
