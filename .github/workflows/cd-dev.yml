@@ -58,8 +58,6 @@ jobs:
             #     break  # Exit the loop after finding an available port
             #   fi
             # done
-        env:
-          SECRET_NAME: ${{ secrets[ ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY ]  }}
       # - name: Start Server
       #   run: |
       #     cd your_project_directory
