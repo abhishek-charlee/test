@@ -32,11 +32,9 @@ jobs:
       - name: Set SSH Key Secret
         run: |
           echo "$PROJECT_NAME"
-
-          # Convert PROJECT_NAME to all uppercase
           project_name_upcase=$(echo "$PROJECT_NAME" | tr '[:lower:]' '[:upper:]')
-          echo "$PROJECT_NAME_UPPERCASE"
-          project_secret_key="${PROJECT_NAME_UPPERCASE}_PRIVATE_KEY"
+          echo "$project_name_upcase"
+          project_secret_key="${project_name_upcase}_PRIVATE_KEY"
           echo $project_secret_key
           echo "PROJECT_SECRET_KEY=$project_secret_key" >> $GITHUB_ENV
           ssh_key=${{ secrets[env.PROJECT_SECRET_KEY] }}
