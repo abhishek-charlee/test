@@ -40,18 +40,18 @@ jobs:
           echo "hi"
           echo $ssh_key
 
-      - name: Export
-        run: |
-          $SECRET_NAME
-        env:
-          SECRET_NAME: ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY
+      # - name: Export
+      #   run: |
+      #     $SECRET_NAME
+      #   env:
+      #     SECRET_NAME: ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
         with:
           host: 10.0.1.6
           username: $PROJECT_NAME
-          key: ${{ secrets.PROJECT_SECRET_KEY }}
+          key: ${{ secrets[env.SECRET_NAME] }}
           port: 8463
           proxy_host: 34.138.106.113
           proxy_username: abhishek
@@ -77,7 +77,8 @@ jobs:
             #     break  # Exit the loop after finding an available port
             #   fi
             # done
-
+        env:
+          SECRET_NAME: ${{ env.PROJECT_SECRET_KEY }}_PRIVATE_KEY
       # - name: Start Server
       #   run: |
       #     cd your_project_directory
