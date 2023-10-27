@@ -58,7 +58,7 @@ jobs:
           proxy_username: abhishek
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           proxy_port: 22
-          script: whoami
+          script: ls
           args: -v
 
       # - name: Deploy to Project Directory
