@@ -34,10 +34,11 @@ jobs:
           echo $PROJECT_NAME 
           secret_key="${PROJECT_NAME}_PRIVATE_KEY"
           echo $secret_key
+          secret_value="${{ secrets[$secret_key] }}"
+          echo $secret_value
 
       # - name:
       #     echo $secret_key
-      # secret_value="${{ secrets[$secret_key] }}"
       # echo "Secret Value: $secret_value"
       # echo $PROJECT_SECRET_KEY=$secret_value >> $GITHUB_ENV
 
