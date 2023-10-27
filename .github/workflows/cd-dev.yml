@@ -34,29 +34,18 @@ jobs:
           echo "$PROJECT_NAME"
 
           # Convert PROJECT_NAME to all uppercase
-          PROJECT_NAME_UPPERCASE=$(echo "$PROJECT_NAME" | tr '[:lower:]' '[:upper:]')
+          project_name_upcase=$(echo "$PROJECT_NAME" | tr '[:lower:]' '[:upper:]')
           echo "$PROJECT_NAME_UPPERCASE"
-
-          secret_key="${PROJECT_NAME_UPPERCASE}_PRIVATE_KEY"
-          echo $secret_key
-
-          echo "HIi"
-          secret_value=${{ secrets[env.PROJECT_NAME] }}
-          echo $secret_value
-          echo "HI"
-          echo "PROJECT_PRIVATE_KEY=$secret_value" >> $GITHUB_ENV
-
-      # - name:
-      #     echo $secret_key
-      # echo "Secret Value: $secret_value"
-      # echo $PROJECT_SECRET_KEY=$secret_value >> $GITHUB_ENV
+          project_secret_key="${PROJECT_NAME_UPPERCASE}_PRIVATE_KEY"
+          echo $project_secret_key
+          echo "PROJECT_SECRET_KEY=$project_secret_key" >> $GITHUB_ENV
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
         with:
           host: 10.0.1.6
           username: $PROJECT_NAME
-          key: $PROJECT_PRIVATE_KEY
+          key: ${{ secrets[env.PROJECT_SECRET_KEY] }}
           port: 8463
           proxy_host: 34.138.106.113
           proxy_username: abhishek
