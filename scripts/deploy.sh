@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo su - test3
-cd UI
+cd /home2/test3/UI
 ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
 echo "Ticket ID: $ticket_id"
 mkdir $ticket_id

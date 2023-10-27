@@ -43,6 +43,8 @@ jobs:
           proxy_port: 22
           script: |
             sudo su - test3
+            id
+            pwd
             cd /home2/test3/UI
             ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
             echo "Ticket ID: $ticket_id"
