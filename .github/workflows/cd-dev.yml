@@ -46,14 +46,13 @@ jobs:
       # - name: SSH Into Dev Environment
       #   run: |
       #     ssh -J abhishek@34.138.106.113 -i ~/.ssh/id_rsa abhishek@10.0.1.6 -p 8463
+
       - name: ssh proxy command
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: 10.0.1.6
-          # host: 34.138.106.113
           username: abhishek
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # port: 22
           port: 8463
           proxy_host: 34.138.106.113
           proxy_username: abhishek
