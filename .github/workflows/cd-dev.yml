@@ -54,6 +54,7 @@ jobs:
           username: abhishek
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          script: whoami
           # port: 8463
           # proxy_host: 34.138.106.113
           # proxy_username: abhishek
