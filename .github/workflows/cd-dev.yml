@@ -42,13 +42,13 @@ jobs:
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           proxy_port: 22
           script: |
-            sudo -u test3 id
-            sudo -u test3 pwd
+            sudo su - test3 -c id
+            sudo su - test3 -c pwd
             ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
             echo "Ticket ID: $ticket_id"
-            sudo -u test3 mkdir UI/$ticket_id
-            sudo -u test3 cd UI/$ticket_id
-            sudo -u test3 ls UI/
+            sudo su - test3 -c mkdir UI/$ticket_id
+            sudo su - test3 -c cd UI/$ticket_id
+            sudo su - test3 -c ls UI/
 
             start_port=3000
             end_port=9000
