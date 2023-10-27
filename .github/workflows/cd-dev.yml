@@ -7,47 +7,55 @@ on:
       - "Feat/*/*"
       - "chore/*/*"
       - "Chore/*/*"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: test3
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract Project and Ticket ID
+      - name: Extract Ticket ID
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           IFS='/' read -ra PARTS <<< "$BRANCH_NAME"
-          PROJECT_NAME=${PARTS[1]}
-          TICKET_ID=${PARTS[2]}
-          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
-          echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
+          ticket_id=${PARTS[2]}
+          echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Display Project and Ticket ID
+      - name: Display Ticket ID
         run: |
-          echo "Project Name: $PROJECT_NAME"
           echo "Ticket ID: $TICKET_ID"
 
-      - name: ssh proxy command
+      - name: Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: 10.0.1.6
-          username: $PROJECT_NAME
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 8463
-          proxy_host: 34.138.106.113
-          proxy_username: abhishek
-          proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          proxy_port: 22
+          host: ${{ secrets.TARGET_HOST }}
+          username: ${{ secrets.TARGET_USERNAME }}
+          key: ${{ secrets.TARGET_PRIVATE_KEY }}
+          port: ${{ secrets.TARGET_PORT }}
+          proxy_host: ${{ secrets.PROXY_HOST }}
+          proxy_username: ${{ secrets.PROXY_USERNAME }}
+          proxy_key: ${{ secrets.PROXY_PRIVATE_KEY }}
+          proxy_port: ${{ secrets.PROXY_HOST_PORT }}
           script: |
-            whoami
-            # sudo su - test3 -c id
-            # sudo su - test3 -c pwd
-            # sudo su - test3 -c "mkdir UI/$TICKET_ID"
-            # sudo su - test3 -c "cd UI/$TICKET_ID"
-            # sudo su - test3 -c "ls UI/"
-            # sudo su - test3 -c "cd UI/$TICKET_ID && git clone git@github.com:abhishek-charlee/test.git"
+            echo "$TICKET_ID"
+            cd UI
+            if [ -d ${{ env.TICKET_ID }} ]; then
+                echo "Directory exists."
+                cd ${{ env.TICKET_ID }}/icvs_priv
+                git stash
+                git pull
+                ls
+            else
+                echo "Directory does not exist."
+                mkdir ${{ env.TICKET_ID }}
+                cd ${{ env.TICKET_ID }}
+                git clone git@github.com:infinilytics/icvs_priv.git -b ${{ env.BRANCH_NAME }}
+                ls
+            fi
+
 
             # start_port=3000
             # end_port=9000
@@ -60,7 +68,6 @@ jobs:
             #     break  # Exit the loop after finding an available port
             #   fi
             # done
-
       # - name: Start Server
       #   run: |
       #     cd your_project_directory
