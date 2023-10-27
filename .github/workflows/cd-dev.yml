@@ -1,0 +1,67 @@
+name: Feature branch deployment Workflow
+
+on:
+  pull_request:
+    branches:
+      - feat/*
+      # - chore/*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Extract Ticket ID
+        id: extract-ticket-id
+        run: |
+          branch_name=$(echo $GITHUB_REF | sed 's|refs/heads/||')
+          ticket_id=$(expr "$branch_name" : 'feat/\(.*\)')
+          echo "::set-output name=ticket_id::$ticket_id"
+
+      - name: Set Up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH Into Dev Environment
+        run: |
+          ssh -J abhishek@34.138.106.113 -i ~/.ssh/id_rsa abhishek@10.0.1.6 -p 8463
+
+      - name: Deploy to Project Directory
+        run: |
+          sudo su - test3
+          cd UI
+          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
+          echo "Ticket ID: $ticket_id"
+          mkdir $ticket_id
+          cd $ticket_id
+          ls
+
+      - name: Check for Available Ports
+        run: |
+          start_port=3000
+          end_port=9000
+
+          for ((port=start_port; port<=end_port; port++))
+          do
+            if ! lsof -i :$port &> /dev/null; then
+              # Port is not in use, you can use it for your server
+              echo "Port $port is available."
+              export AVAILABLE_PORT=$port
+              # You can assign $port to a variable for later use
+              break  # Exit the loop after finding an available port
+            fi
+          done
+
+      # - name: Start Server
+      #   run: |
+      #     cd your_project_directory
+      #     ./start_server.sh $AVAILABLE_PORT
