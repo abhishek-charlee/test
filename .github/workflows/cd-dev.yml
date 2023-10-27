@@ -42,7 +42,7 @@ jobs:
             echo "$TICKET_ID"
             cd UI
             mkdir testt
-            mkdir ${{ $TICKET_ID }}
+            mkdir ${{ env.TICKET_ID }}
             echo "hii"
             echo "hii $TICKET_ID"
             # cd $TICKET_ID
