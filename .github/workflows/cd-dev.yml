@@ -40,6 +40,7 @@ jobs:
           echo $project_secret_key
           echo "PROJECT_SECRET_KEY=$project_secret_key" >> $GITHUB_ENV
           ssh_key=${{ secrets[env.PROJECT_SECRET_KEY] }}
+          echo "hi"
           echo $ssh_key
 
       - name: ssh proxy command
