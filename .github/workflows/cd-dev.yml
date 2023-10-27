@@ -19,22 +19,27 @@ jobs:
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           IFS='/' read -ra PARTS <<< "$BRANCH_NAME"
-          PROJECT_NAME=${PARTS[1]}
-          TICKET_ID=${PARTS[2]}
-          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
-          echo "TICKET_ID=$TICKET_ID" >> $GITHUB_ENV
+          project_name=${PARTS[1]}
+          ticket_id=${PARTS[2]}
+          echo "PROJECT_NAME=$project_name" >> $GITHUB_ENV
+          echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
 
       - name: Display Project and Ticket ID
         run: |
           echo "Project Name: $PROJECT_NAME"
           echo "Ticket ID: $TICKET_ID"
 
+      - name: Set SSH Key Secret
+        run: |
+          project_secret_key="SSH_${PROJECT_NAME}_PRIVATE_KEY"
+          echo "$PROJECT_SECRET_KEY=${{ secrets[$project_secret_key] }}" >> $GITHUB_EN
+
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
         with:
           host: 10.0.1.6
           username: $PROJECT_NAME
-          key: ${{ secrets.${PROJECT_NAME}_private_key }}
+          key: ${{ env.PROJECT_SECRET_KEY }}
           port: 8463
           proxy_host: 34.138.106.113
           proxy_username: abhishek
