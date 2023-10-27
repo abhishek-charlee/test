@@ -3,9 +3,10 @@ name: Feature branch deployment Workflow
 on:
   push:
     branches:
-      - "feat/*"
-      - "Feat/*"
-      - "chore/*"
+      - "feat/*/*"
+      - "Feat/*/*"
+      - "chore/*/*"
+      - "Chore/*/*"
 # on:
 #   pull_request:
 #     branches:
