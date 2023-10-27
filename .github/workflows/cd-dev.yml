@@ -19,16 +19,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract and Set TICKET_ID
+      - name: Extract Ticket ID
+        id: extract-ticket-id
         run: |
           branch_name=$(echo $GITHUB_REF | sed 's|refs/heads/||')
-          if [[ "$branch_name" =~ ^(feat/|chore/)(.*)$ ]]; then
-            ticket_id="${BASH_REMATCH[2]}"
-            echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
-          else
-            echo "No matching pattern found in the branch name."
-          fi
-        shell: bash
+          ticket_id=$(expr "$branch_name" : 'feat/\(.*\)')
+          echo "::set-output name=ticket_id::$ticket_id"
+
+      - name: Use Ticket ID
+        run: |
+          ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
+          echo "Ticket ID: $ticket_id"
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
@@ -42,11 +43,12 @@ jobs:
           proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
           proxy_port: 22
           script: |
+            ticket_id=${{ steps.extract-ticket-id.outputs.ticket_id }}
             sudo su - test3 -c id
             sudo su - test3 -c pwd
-            echo "Ticket ID: $TICKET_ID"
-            sudo su - test3 -c mkdir UI/$TICKET_ID
-            sudo su - test3 -c cd UI/$TICKET_ID
+            echo "Ticket ID: $ticket_id"
+            sudo su - test3 -c mkdir UI/$ticket_id
+            sudo su - test3 -c cd UI/$ticket_id
             sudo su - test3 -c ls UI/
 
             start_port=3000
