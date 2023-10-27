@@ -39,6 +39,8 @@ jobs:
           project_secret_key="${PROJECT_NAME_UPPERCASE}_PRIVATE_KEY"
           echo $project_secret_key
           echo "PROJECT_SECRET_KEY=$project_secret_key" >> $GITHUB_ENV
+          ssh_key = ${{ secrets[env.PROJECT_SECRET_KEY] }}
+          echo $ssh_key
 
       - name: ssh proxy command
         uses: appleboy/ssh-action@master
