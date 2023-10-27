@@ -40,14 +40,23 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-keyscan 10.0.1.6 >> ~/.ssh/known_hosts
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: SSH Into Dev Environment
-        run: |
-          cat ~/.ssh/id_rsa
-          ssh -J abhishek@34.138.106.113 -i ~/.ssh/id_rsa abhishek@10.0.1.6 -p 8463
+      # - name: SSH Into Dev Environment
+      #   run: |
+      #     ssh -J abhishek@34.138.106.113 -i ~/.ssh/id_rsa abhishek@10.0.1.6 -p 8463
+      - name: ssh proxy command
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: 10.0.1.6
+          username: abhishek
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 8463
+          proxy_host: 34.138.106.113
+          proxy_username: abhishek
+          proxy_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          proxy_port: 22
 
       - name: Deploy to Project Directory
         run: |
