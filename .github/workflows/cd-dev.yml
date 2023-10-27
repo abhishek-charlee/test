@@ -44,7 +44,7 @@ jobs:
             cd UI
             if [ -d ${{ env.TICKET_ID }} ]; then
                 echo "Directory exists."
-                cd ${{ env.TICKET_ID }}/test
+                cd ${{ env.TICKET_ID }}/icvs_priv
                 git stash
                 git pull
                 ls
@@ -52,7 +52,7 @@ jobs:
                 echo "Directory does not exist."
                 mkdir ${{ env.TICKET_ID }}
                 cd ${{ env.TICKET_ID }}
-                git clone git@github.com:abhishek-charlee/test.git -b ${{ env.BRANCH_NAME }}
+                git clone git@github.com:infinilytics/icvs_priv.git -b ${{ env.BRANCH_NAME }}
                 ls
             fi
 
