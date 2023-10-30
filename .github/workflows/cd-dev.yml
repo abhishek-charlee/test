@@ -1,4 +1,4 @@
-name: Feature branch deployment Workflow
+name: 🚀 Feature branch deployment
 
 on:
   push:
@@ -23,26 +23,26 @@ jobs:
     runs-on: ubuntu-latest
     environment: test3
     steps:
-      - name: Checkout Code
+      - name: 📦 Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract Ticket ID
+      - name: 🎫 Extract Ticket ID
         run: |
           branch_name="${GITHUB_REF##refs/heads/}"
           echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
           if [[ $branch_name =~ ([-_]?)([0-9]+[-_]?[^0-9]*)$ ]]; then
             ticket_id="${BASH_REMATCH[2]}"
-            echo "Ticket ID: $ticket_id"
+            echo "🎫 Ticket ID: $ticket_id"
             echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
           else
-            echo "No valid ticket ID found in the branch name."
+            echo "❌ No valid ticket ID found in the branch name."
           fi
 
-      - name: Display Ticket ID
+      - name: 📊 Display Ticket ID
         run: |
-          echo "Ticket ID: $TICKET_ID"
+          echo "🎫 Ticket ID: $TICKET_ID"
 
-      - name: Deploy
+      - name: 🚢 Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.TARGET_HOST }}
@@ -57,12 +57,12 @@ jobs:
             echo "$TICKET_ID"
             cd SS
             if [ -d ${{ env.TICKET_ID }} ]; then
-                echo "Directory exists."
+                echo "📂 Directory exists."
                 cd ${{ env.TICKET_ID }}/icvs_priv
                 git stash
                 git pull
             else
-                echo "Directory does not exist."
+                echo "📂 Directory does not exist."
                 mkdir ${{ env.TICKET_ID }}
                 cd ${{ env.TICKET_ID }}
                 git clone git@github.com:infinilytics/icvs_priv.git -b ${{ env.BRANCH_NAME }}
