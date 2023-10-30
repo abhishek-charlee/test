@@ -7,6 +7,16 @@ on:
       - "Feat/*/*"
       - "chore/*/*"
       - "Chore/*/*"
+      - "qa/*/*"
+      - "dev/*/*"
+      - "qa-*"
+      - "dev-*"
+      - "Dev-*"
+      - "QA-*"
+      - "dev_*"
+      - "qa_*"
+      - "DEV_*"
+      - "QA_*"
 
 jobs:
   deploy:
