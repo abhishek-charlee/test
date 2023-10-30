@@ -30,7 +30,7 @@ jobs:
         run: |
           branch_name="${GITHUB_REF##refs/heads/}"
           echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
-          if [[ $branch_name =~ ([-_]?[0-9]+[-_]?[^0-9]*)$ ]]; then
+          if [[ $branch_name =~ ([-_]?[0-9]+[-_]?$) ]]; then
             ticket_id="${BASH_REMATCH[1]}"
             echo "Ticket ID: $ticket_id"
             echo "TICKET_ID=$ticket_id" >> $GITHUB_ENV
