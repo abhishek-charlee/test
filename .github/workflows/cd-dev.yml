@@ -3,12 +3,6 @@ name: Feature branch deployment Workflow
 on:
   push:
     branches:
-      - "feat/*/*"
-      - "Feat/*/*"
-      - "chore/*/*"
-      - "Chore/*/*"
-      - "qa/*/*"
-      - "dev/*/*"
       - "qa-*"
       - "dev-*"
       - "Dev-*"
@@ -17,6 +11,12 @@ on:
       - "qa_*"
       - "DEV_*"
       - "QA_*"
+      - "feat/*/*"
+      - "Feat/*/*"
+      - "chore/*/*"
+      - "Chore/*/*"
+      - "qa/*/*"
+      - "dev/*/*"
 
 jobs:
   deploy:
