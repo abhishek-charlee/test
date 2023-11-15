@@ -3,7 +3,6 @@ name: QA deployment
 on:
   push:
 
-#
 jobs:
   verify-deployment-commit:
     runs-on: ubuntu-latest
