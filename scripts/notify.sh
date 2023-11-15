@@ -57,7 +57,7 @@ fi
 
 # Create Slack payload
 PAYLOAD='{
-  "channel": "dev-qa-team",
+  "channel": "slack-alerts-for-cd",
   "icon_emoji": "'"${ICON_EMOJI}"'",
   "username": "deployment-bot",
   "attachments": [
