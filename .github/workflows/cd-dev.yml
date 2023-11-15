@@ -35,7 +35,7 @@ jobs:
           fi
 
       - name: 🎫 Port and ticket
-        run: echo ${{ env.TICKET_ID }} ${{ env.PORT_NUMBER }}
+        run: echo ${ ${{ env.PORT_NUMBER }}
 
       - name: Set DEPLOYMENT_LOCATION # used for the slack notification script
         run: |
