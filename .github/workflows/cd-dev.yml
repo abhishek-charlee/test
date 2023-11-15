@@ -33,9 +33,9 @@ jobs:
 
       - name: 🎫 Extract Port Number
         run: |
-          PORT_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'please deploy to port \K\d+')
-          echo  Port Number: ${{ env.PORT_NUMBER }}
-          echo "PORT_NUMBER=${PORT_NUMBER}" >> $GITHUB_ENV
+          port=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'please deploy to port \K\d+')
+          echo  Port Number: $port
+          echo "PORT_NUMBER=${port}" >> $GITHUB_ENV
 
       - name: Set DEPLOYMENT_LOCATION # used for the slack notification script
         run: |
