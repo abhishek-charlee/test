@@ -1,32 +1,28 @@
-name: Feature branch deployment Workflow
+name: QA deployment
 
 on:
   push:
-    branches:
-      - "feat/*/*"
-      - "Feat/*/*"
-      - "chore/*/*"
-      - "Chore/*/*"
-      - "qa/*/*"
-      - "dev/*/*"
-      - "qa-*"
-      - "dev-*"
-      - "Dev-*"
-      - "QA-*"
-      - "dev_*"
-      - "qa_*"
-      - "DEV_*"
-      - "QA_*"
 
 jobs:
-  deploy:
+  verify-deployment-commit:
     runs-on: ubuntu-latest
-    environment: test3
+    if: ${{ contains(github.event.head_commit.message, 'please deploy') }}
     steps:
-      - name: Checkout Code
+      - name: 🔍 Verify Deployment commit
+        run: |
+          PORT_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'please deploy to port \K\d+')
+          echo "PORT_NUMBER=${PORT_NUMBER}" >> $GITHUB_ENV
+          echo "The commit message contains a deployment request to port ${PORT_NUMBER}. Deploying to the respective environment ..."
+
+  deploy-to-qa:
+    runs-on: ubuntu-latest
+    environment: qa-nlc
+    needs: verify-deployment-commit
+    steps:
+      - name: 📦 Checkout Code
         uses: actions/checkout@v3
 
-      - name: Extract Ticket ID
+      - name: 🎫 Extract Ticket ID
         run: |
           branch_name="${GITHUB_REF##refs/heads/}"
           echo "BRANCH_NAME=$branch_name" >> $GITHUB_ENV
@@ -38,11 +34,18 @@ jobs:
             echo "No valid ticket ID found in the branch name."
           fi
 
-      - name: Display Ticket ID
-        run: |
-          echo "Ticket ID: $TICKET_ID"
+      - name: 🎫 Port and ticket
+        run: echo ${{ env.TICKET_ID }} ${{ env.PORT_NUMBER }}
 
-      - name: Deploy
+      - name: Set DEPLOYMENT_LOCATION # used for the slack notification script
+        run: |
+          echo "DEPLOYMENT_LOCATION=/home2/qa-nlc/UI/${{ env.TICKET_ID }}/smartC_UI" >> $GITHUB_ENV
+
+      - name: 🔔 Notify pre-deployment status
+        if: always() && true
+        run: ./scripts/notify.sh -s 'in_progress' -w ${{ secrets.SLACK_WEBHOOK }} -t ${{ env.TICKET_ID }} -b ${{ env.BRANCH_NAME }} -d ${{ env.DEPLOYMENT_LOCATION }}
+
+      - name: 🚀 Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.TARGET_HOST }}
@@ -54,34 +57,28 @@ jobs:
           proxy_key: ${{ secrets.PROXY_PRIVATE_KEY }}
           proxy_port: ${{ secrets.PROXY_HOST_PORT }}
           script: |
-            echo "$TICKET_ID"
-            cd SS
+            echo "SSHing into the VM..."
+            cd UI
+
+            existing_pid=$(lsof -t -i:${{ env.PORT_NUMBER }} || true)
+            if [ -n "$existing_pid" ]; then
+              echo "Killing existing process on port ${{ env.PORT_NUMBER }}..."
+            fi
+
             if [ -d ${{ env.TICKET_ID }} ]; then
                 echo "Directory exists."
-                cd ${{ env.TICKET_ID }}/icvs_priv
+                cd ${{ env.TICKET_ID }}/smartC_UI
                 git stash
                 git pull
+                echo "$(pwd)"
             else
                 echo "Directory does not exist."
                 mkdir ${{ env.TICKET_ID }}
                 cd ${{ env.TICKET_ID }}
-                git clone git@github.com:infinilytics/icvs_priv.git -b ${{ env.BRANCH_NAME }}
+                git clone git@github.com:infinilytics/smartC_UI.git -b ${{ env.BRANCH_NAME }}
+                echo $(pwd)
             fi
 
-
-            # start_port=3000
-            # end_port=9000
-
-            # for ((port=start_port; port<=end_port; port++))
-            # do
-            #   if ! lsof -i :$port &> /dev/null; then
-            #     echo "Port $port is available."
-            #     export AVAILABLE_PORT=$port
-            #     break  # Exit the loop after finding an available port
-            #   fi
-            # done
-
-      # - name: Start Server
-      #   run: |
-      #     cd your_project_directory
-      #     ./start_server.sh $AVAILABLE_PORT
+      - name: 🔔 Notify post-deployment status
+        if: always() && true
+        run: ./scripts/notify.sh -s ${{ job.status }} -w ${{ secrets.SLACK_WEBHOOK }} -t ${{ env.TICKET_ID }} -b ${{ env.BRANCH_NAME }} -d ${{ env.DEPLOYMENT_LOCATION }}
